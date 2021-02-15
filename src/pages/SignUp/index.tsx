@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { Image, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { Form } from '@unform/mobile';
+import { FormHandles } from '@unform/core';
 import { SafeAreaView } from "react-native-safe-area-context";
 import logo from '../../assets/logo.png';
 import Input from '../../components/Input';
@@ -16,7 +18,14 @@ import {
 
 
 const SignUp: React.FC = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+
+  const formRef = useRef<FormHandles>(null);
+
+  const handleSignUp = useCallback((data: object) => {
+    console.log(data);
+
+  }, [])
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -34,12 +43,14 @@ const SignUp: React.FC = () => {
             <View>
               <Title>Crie sua Conta</Title>
             </View>
-            <Input name="name" icon="user" placeholder="Nome" />
-            <Input name="email" icon="mail" placeholder="Email" />
-            <Input name="password" icon="lock" placeholder="Senha" />
+            <Form ref={formRef} onSubmit={handleSignUp}>
+              <Input name="name" icon="user" placeholder="Nome" />
+              <Input name="email" icon="mail" placeholder="Email" />
+              <Input name="password" icon="lock" placeholder="Senha" />
+            </Form>
             <Button
               onPress={() => {
-                console.log('deu');
+                formRef.current?.submitForm();
               }}
             >
               Entrar
