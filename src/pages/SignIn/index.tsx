@@ -1,9 +1,11 @@
 import React, { useCallback, useRef } from 'react';
-import { Image, View, ScrollView, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
+import { Alert, Image, View, ScrollView, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
+import getValidationsErros from '../../utils/getValidationsErros';
 import { SafeAreaView } from "react-native-safe-area-context";
 import logo from '../../assets/logo.png';
 import Input from '../../components/Input';
@@ -17,6 +19,10 @@ import {
   CreateAccountButtonText
 } from './styles';
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
 
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
@@ -26,10 +32,42 @@ const SignIn: React.FC = () => {
 
 
 
-  const handleSignIn = useCallback((data: object) => {
-    console.log(data);
+  const handleSignIn = useCallback(
+    async (data: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({});
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('Email Obrigatório')
+            .email('Digite um email válido!'),
+          password: Yup.string().required('Senha Obrigatória!'),
+        });
 
-  }, [])
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+        // await signIn({
+        //   email: data.email,
+        //   password: data.password,
+        // });
+        // history.push("/dashboard");
+      } catch (err) {
+
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationsErros(err);
+          formRef.current?.setErrors(errors);
+          return;
+        }
+
+        Alert.alert(
+          'Erro na Autenticação!',
+          'Ocorreu um erro ao fazer login, cheque as credenciais!'
+        )
+
+      }
+    },
+    [],
+  );
 
 
   return (

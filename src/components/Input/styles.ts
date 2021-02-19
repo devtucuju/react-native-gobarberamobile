@@ -1,10 +1,16 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import {
   responsiveHeight,
   responsiveFontSize
 } from "react-native-responsive-dimensions";
 import { Feather } from '@expo/vector-icons';
-export const Container = styled.View`
+
+interface ContainerProps {
+  isFocused: boolean;
+  isErrored: boolean;
+}
+
+export const Container = styled.View<ContainerProps>`
   width: 100%;
   /* height: 60px; */
   height: ${responsiveHeight(8)}px;
@@ -13,9 +19,20 @@ export const Container = styled.View`
   border-radius: 10px;
   /* margin-bottom: 8px; */
   margin-bottom:${responsiveHeight(1.7)}px;
+  border-width: 2px;
+  border-color: #232129;
+
 
   flex-direction:row;
   align-items:center;
+
+  ${props => props.isErrored && css`
+  border-color:#c53030;
+  `}
+
+  ${props => props.isFocused && css`
+  border-color:#ff9000;
+  `}
 `;
 export const TextInput = styled.TextInput`
   flex: 1;
