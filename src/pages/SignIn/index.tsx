@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import { useAuth } from '../../context/auth';
 import getValidationsErros from '../../utils/getValidationsErros';
 import { SafeAreaView } from "react-native-safe-area-context";
 import logo from '../../assets/logo.png';
@@ -26,11 +27,11 @@ interface SignInFormData {
 
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
+  const { signIn, user } = useAuth();
+  console.log(user);
+
   const formRef = useRef<FormHandles>(null)
   const passwordInputRef = useRef<TextInput>(null)
-
-
-
 
   const handleSignIn = useCallback(
     async (data: SignInFormData) => {
@@ -46,11 +47,11 @@ const SignIn: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-        // await signIn({
-        //   email: data.email,
-        //   password: data.password,
-        // });
-        // history.push("/dashboard");
+        await signIn({
+          email: data.email,
+          password: data.password,
+        });
+        // navigation.navigate("/dashboard");
       } catch (err) {
 
         if (err instanceof Yup.ValidationError) {

@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
+import AppProvider from './context';
 
 import RobotoSlabMedium from '../assets/fonts/RobotoSlab-Medium.ttf';
 import RobotoSlabRegular from '../assets/fonts/RobotoSlab-Regular.ttf';
@@ -36,9 +37,11 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <SafeAreaProvider style={{ flex: 1, backgroundColor: '#312e38' }}>
-        <Routes />
-      </SafeAreaProvider>
+      <AppProvider>
+        <SafeAreaProvider style={{ flex: 1, backgroundColor: '#312e38' }}>
+          <Routes />
+        </SafeAreaProvider>
+      </AppProvider>
       <StatusBar style="light" backgroundColor="#312e38" />
     </NavigationContainer>
   );
