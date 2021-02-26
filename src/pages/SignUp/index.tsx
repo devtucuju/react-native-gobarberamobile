@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import api from '../../services/api';
 import getValidationsErros from '../../utils/getValidationsErros';
 import { SafeAreaView } from "react-native-safe-area-context";
 import logo from '../../assets/logo.png';
@@ -46,10 +47,11 @@ const SignUp: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false,
       });
-      // await api.post('/users', data);
-      // history.push('/');
+      await api.post('/users', data);
+      Alert.alert('Cadastro realizado!', "Você já pode fazer seu login no app")
 
-      Alert.alert('Cadastro realizado!', "Você já pode fazer seu logon no sistema")
+      navigation.goBack();
+
 
 
     } catch (err) {
